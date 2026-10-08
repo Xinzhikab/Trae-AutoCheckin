@@ -1081,6 +1081,12 @@ def main():
         out.append('%s %s(%s): %s | %s' % (r['icon'], r['name'], r['uid'], r['status'], r['detail']))
     push('🤖 Trae SOLO 多账号签到', '\n'.join(out))
 
+    # 硬失败（鉴权失败 / token 失效 / 未开放 / 未预期错误码 / 异常）返回非零退出码，
+    # 让 GitHub Actions 真实变红；限流(待重试)属预期，不计入失败。
+    if dead_n > 0 or fail_n > 0:
+        print('❌ 存在硬失败（dead=%d fail=%d），返回退出码 1' % (dead_n, fail_n))
+        sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
